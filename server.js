@@ -18,4 +18,4 @@ app.use('/api/powderDispatchingEntryModel', require('./Api/PowderDispatchingEntr
 
 const Port = process.env.PORT || 3001;
 
-app.listen(Port, () => onsole.log(`Our app is running on port ${ Port }`));
+app.listen(Port, () => console.log(`Our app is running on port ${ Port }`));
