@@ -16,6 +16,6 @@ app.use('/api/incomingEntryModel', require('./Api/IncomingEntry'));
 app.use('/api/grindingEntryModel', require('./Api/GrindingEntry'));
 app.use('/api/powderDispatchingEntryModel', require('./Api/PowderDispatchingEntry'));
 
-const Port = process.env.Port || 3001;
+const Port = process.env.PORT || 3001;
 
-app.listen(Port, () => console.log("Server has been started"));
+app.listen(Port, () => onsole.log(`Our app is running on port ${ Port }`);
