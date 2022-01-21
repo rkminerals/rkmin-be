@@ -23,12 +23,12 @@ router.post('/', (req, res) => {
         var updatePowderBalanceData = {
             params: {id: req.body.mineralId},
             body: {
-                gradeName: req.body.gradeName, 
+                rockType: req.body.gradeName, //rockType corresponds to gradeName
                 quantityChange: -req.body.quantityDispatched, 
-                //supplier: req.body.supplier
+                supplier: req.body.supplier
                 }
             }
-        mineralApi.updatePowderGradeBalance(updatePowderBalanceData, res);
+        mineralApi.updatePowderGradeBalance(updatePowderBalanceData, res, 0);
     }).then(() => {
         res.send({message: 'success'})
     }).catch(() => {res.send({message: "failure", info: "in creating powderDispatchingEntry"})});
@@ -40,11 +40,12 @@ router.post('/deleteById/:id', async (req, res) => {
         var updatePowderBalanceData = {
             params: {id: req.body.mineralId},
             body: {
-                gradeName: req.body.gradeName, 
-                quantityChange: req.body.quantityDispatched,  
+                rockType: req.body.gradeName, 
+                quantityChange: req.body.quantityDispatched,
+                supplier: req.body.supplier
                 }
             }
-        mineralApi.updatePowderGradeBalance(updatePowderBalanceData, res);
+        mineralApi.updatePowderGradeBalance(updatePowderBalanceData, res, 0);
     }).then(()=>{
         res.send({message: 'success'})
     }).catch((err) => {

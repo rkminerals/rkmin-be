@@ -35,7 +35,7 @@ router.post('/', (req, res) => {
                 //supplier: req.body.supplier
                 }
             }
-        mineralApi.updatePowderGradeBalance(updatePowderBalanceData, res);
+        mineralApi.updatePowderGradeBalance(updatePowderBalanceData, res, 0);
 
         }).then(()=>{
         resObj.updatePowderBalance = "done";
@@ -54,6 +54,7 @@ router.post('/', (req, res) => {
                     var constituentRock = req.body.composition[lCounter++]; //2
  
                     var quantityUsed = (constituentRock.inputPartRatio)*req.body.quantityProduced;
+                    if(constituentRock.constituentType === 'Rock'){
                     var updateRockTypeBalanceData = {
                         params: {id: req.body.mineralId},
                         body: {
@@ -63,7 +64,18 @@ router.post('/', (req, res) => {
                             }
                         }
                   mineralApi.updateRockTypeBalance(updateRockTypeBalanceData, res, counter);
+                } else if(constituentRock.constituentType === 'Powder'){
+                    var updatePowderGradeBalanceData = {
+                        params: {id: req.body.mineralId},
+                        body: {
+                            rockType: constituentRock.grade, 
+                            quantityChange: -quantityUsed, 
+                            supplier: constituentRock.supplier
+                            }
+                        }
+                  mineralApi.updatePowderGradeBalance(updatePowderGradeBalanceData, res, counter);
                 }
+            }
             }, 100)   
     }).then(()=>{
         resObj.updateRockTypeBalance = "done";
@@ -86,10 +98,10 @@ router.post('/deleteById/:id', async (req, res) => {
             body: {
                 gradeName: req.body.gradeName, 
                 quantityChange: -req.body.quantityProduced, 
-                //supplier: req.body.supplier
+                supplier: req.body.supplier
                 }
             }
-        mineralApi.updatePowderGradeBalance(updatePowderBalanceData, res, );
+        mineralApi.updatePowderGradeBalance(updatePowderBalanceData, res, 0);
     }).then(() => {
         //updateRockTypeBalance 
         var comLen = req.body.composition.length;
@@ -105,15 +117,27 @@ router.post('/deleteById/:id', async (req, res) => {
                     var constituentRock = req.body.composition[lCounter++]; //2
  
                     var quantityUsed = (constituentRock.inputPartRatio)*req.body.quantityProduced;
-                    var updateRockTypeBalanceData = {
-                        params: {id: req.body.mineralId},
-                        body: {
-                            rockType: constituentRock.rockType, 
-                            quantityChange: quantityUsed, 
-                            supplier: constituentRock.supplier
+                    if(constituentRock.constituentType === 'Rock'){
+                        var updateRockTypeBalanceData = {
+                            params: {id: req.body.mineralId},
+                            body: {
+                                rockType: constituentRock.rockType, 
+                                quantityChange: quantityUsed, 
+                                supplier: constituentRock.supplier
+                                }
                             }
-                        }
-                  mineralApi.updateRockTypeBalance(updateRockTypeBalanceData, res, counter);
+                      mineralApi.updateRockTypeBalance(updateRockTypeBalanceData, res, counter);
+                    } else if(constituentRock.constituentType === 'Powder'){
+                        var updatePowderGradeBalanceData = {
+                            params: {id: req.body.mineralId},
+                            body: {
+                                rockType: constituentRock.grade, 
+                                quantityChange: quantityUsed, 
+                                supplier: constituentRock.supplier
+                                }
+                            }
+                      mineralApi.updatePowderGradeBalance(updatePowderGradeBalanceData, res, counter);
+                    }
                 }
             }, 100); 
     }).then(() => {

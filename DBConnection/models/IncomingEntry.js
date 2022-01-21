@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 let incomingEntry = mongoose.Schema({
     timeStamp:{ type: Date, default: Date.now()}, 
     incomingDate: { type: String},  
+    incomingType: String,
     mineralId: String,  
     mineralName: String,    
     supplier: String,  

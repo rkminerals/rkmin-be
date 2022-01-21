@@ -51,23 +51,21 @@ router.put('/updaterocktypebalance/:id', (req, res) => {
 });
 
 //updatePowderGradeBalance
-const updatePowderGradeBalance = (req, res) => {
-    
-    Mineral.findOne({_id: req.params.id}).then((mineral)=>{ 
+const updatePowderGradeBalance =  (req, res, counter) => {
+    console.log(req);
+     Mineral.findOne({_id: req.params.id}).then((mineral)=>{ 
         var powderGrades = mineral.powderGrades;
         powderGrades.map((obj)=>{
-            if(obj.gradeName == req.body.gradeName){
+            if(obj.gradeName == req.body.rockType && obj.supplier == req.body.supplier){
                 obj.gradeBalance += req.body.quantityChange;
             }
         });
-
-        Mineral.findByIdAndUpdate({_id: req.params.id}, {"powderGrades": powderGrades}).catch((err)=>{
-            res.send("something went wrong in updatePowderGradeBalance");
-            // Mineral.findOne({_id: req.params.id}).then((mineral)=>{
-            //     console.log(mineral);
-            // })
-        }) 
-    }) 
+        Mineral.findByIdAndUpdate({_id: req.params.id}, {"powderGrades": powderGrades}).catch(()=>{
+                res.send("Error in updating powderGrade-balance, try again");
+            })
+    }).then(()=>{
+        counter.value++;
+    })
 }
 
 router.put('/updatepowdergradebalance/:id', (req, res) => { 

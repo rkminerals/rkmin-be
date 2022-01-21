@@ -5,7 +5,7 @@ let mineral = new mongoose.Schema ({
     measuringUnit: String, //Metric tonne
     rockTypes: [{rockType: String, supplier: String, typeBalance: Number}],  
     suppliers: [String],
-    powderGrades: [{gradeName: String, gradeBalance: Number}],
+    powderGrades: [{gradeName: String, gradeBalance: Number, supplier: String}],
 });
 
 module.exports = Mineral = mongoose.model('mineral', mineral);

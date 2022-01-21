@@ -2,6 +2,7 @@ const express = require('express');
 const mineralApi = require('./Mineral'); 
 const IncomingEntry = require('../DBConnection/models/IncomingEntry'); 
 const utilities = require('./utilities');
+const { request } = require('express');
 
 const router = express.Router();
 
@@ -17,8 +18,21 @@ router.get('/allInReport', async (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    IncomingEntry.create(req.body).then(() => {
-        var targetRockType = {
+    IncomingEntry.create(req.body).then((res) => {
+        console.log(req.body.incomingType);
+        if(req.body.incomingType === "Powder"){
+            var targetPowderType = {
+                params: {id: req.body.mineralId},
+                body: {
+                    rockType: req.body.rockType, 
+                    quantityChange: req.body.typeQuantity, 
+                    supplier: req.body.supplier
+                    }
+                }
+                console.log(targetPowderType);
+            mineralApi.updatePowderGradeBalance(targetPowderType, res, 0);
+        } else if(req.body.incomingType === 'Rock'){
+            var targetRockType = {
             params: {id: req.body.mineralId},
             body: {
                 rockType: req.body.rockType, 
@@ -27,6 +41,7 @@ router.post('/', (req, res) => {
                 }
             }
         mineralApi.updateRockTypeBalance(targetRockType, res, 0);
+    }
     }).then(()=>{
         res.send({message: "success"})
     }).catch(() => {
