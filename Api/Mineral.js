@@ -2,8 +2,9 @@ const express = require('express');
 const Mineral = require('../DBConnection/models/Mineral');
 const router = express.Router();
 const utilities = require('./utilities');
+const tokenVerification = require('./../middleware');
 
-router.get('/', async (req, res) => {
+router.get('/', tokenVerification, async (req, res) => {
     var allMinerals = [];
     var allMinerals = await Mineral.find();
     if(allMinerals.length != 0){
@@ -13,13 +14,13 @@ router.get('/', async (req, res) => {
     }   
 })
 
-router.post('/', (req, res)=>{ 
+router.post('/', tokenVerification, (req, res)=>{ 
      Mineral.create(req.body).then((mineral) => {
          res.send({content: mineral, message: 'sucess'});
      })
 });
 
-router.put('/:id', (req, res) => { 
+router.put('/:id', tokenVerification, (req, res) => { 
     Mineral.findByIdAndUpdate({_id: req.params.id}, req.body).then(()=>{
         Mineral.findOne({_id: req.params.id}).then((mineral)=>{
             res.send({content: mineral, message: 'success'});
@@ -45,7 +46,7 @@ const updateRockTypeBalance =  (req, res, counter) => {
     })
 }
 
-router.put('/updaterocktypebalance/:id', (req, res) => { 
+router.put('/updaterocktypebalance/:id', tokenVerification, (req, res) => { 
     {/*req interface: {rocktype, amountChange, supplier}*/}
     updateRockTypeBalance(req, res, 0);
 });
@@ -68,7 +69,7 @@ const updatePowderGradeBalance =  (req, res, counter) => {
     })
 }
 
-router.put('/updatepowdergradebalance/:id', (req, res) => { 
+router.put('/updatepowdergradebalance/:id', tokenVerification, (req, res) => { 
     {/*req interface: {gradeName, amountChange}*/}
    updatePowderGradeBalance(req, res);
 });

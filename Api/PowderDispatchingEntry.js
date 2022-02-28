@@ -5,8 +5,10 @@ const mineralApi = require('./Mineral');
 const utilities = require('./utilities');
 
 const router = express.Router();
+const tokenVerification = require('./../middleware');
 
-router.get('/allInReport', async (req, res) => {
+
+router.get('/allInReport', tokenVerification, async (req, res) => {
     var all = [];
     var all = await PowderDispatchingEntry.find();
     if(all.length != 0){
@@ -17,7 +19,7 @@ router.get('/allInReport', async (req, res) => {
     }   
 })
 
-router.post('/', (req, res) => {
+router.post('/', tokenVerification, (req, res) => {
     PowderDispatchingEntry.create(req.body).then(() => {
         //updatePowderBalance
         var updatePowderBalanceData = {
@@ -34,7 +36,7 @@ router.post('/', (req, res) => {
     }).catch(() => {res.send({message: "failure", info: "in creating powderDispatchingEntry"})});
 });
 
-router.post('/deleteById/:id', async (req, res) => {
+router.post('/deleteById/:id', tokenVerification, async (req, res) => {
     PowderDispatchingEntry.deleteOne({_id: req.params.id}).then(() => {
         //updatePowderBalance
         var updatePowderBalanceData = {
@@ -53,7 +55,7 @@ router.post('/deleteById/:id', async (req, res) => {
     })
 });
 
-router.get('/getLastInserted', async (req, res) => {
+router.get('/getLastInserted', tokenVerification, async (req, res) => {
     var latest = await PowderDispatchingEntry.find({}).sort({_id:-1}).limit(1);
     res.send({content: latest, message: "success"});
 });

@@ -6,9 +6,11 @@ const mineralApi = require('./Mineral');
 
 const utilities = require('./utilities');
 
+const tokenVerification = require('./../middleware');
+
 const router = express.Router();
 
-router.get('/allInReport', async (req, res) => {
+router.get('/allInReport', tokenVerification, async (req, res) => {
     var all = [];
     var all = await GrindingEntry.find();
     
@@ -20,19 +22,20 @@ router.get('/allInReport', async (req, res) => {
     }   
 })
 
-router.post('/', (req, res) => {
+router.post('/', tokenVerification, (req, res) => {
     var resObj = {};
     GrindingEntry.create(req.body).then((resa)=>{
         resObj.GrindingEntrySaved = "done";
         //console.log(resa);
 
         //updatePowderBalance
+        console.log(req.body);
         var updatePowderBalanceData = {
             params: {id: req.body.mineralId},
             body: {
-                gradeName: req.body.gradeName, 
+                rockType: req.body.gradeName, 
                 quantityChange: req.body.quantityProduced, 
-                //supplier: req.body.supplier
+                supplier: 'Self'
                 }
             }
         mineralApi.updatePowderGradeBalance(updatePowderBalanceData, res, 0);
@@ -89,7 +92,7 @@ router.post('/', (req, res) => {
     })
 });
 
-router.post('/deleteById/:id', async (req, res) => {
+router.post('/deleteById/:id', tokenVerification, async (req, res) => {
     console.log(req);
     GrindingEntry.deleteOne({_id: req.params.id}).then(() =>{
         //updatePowderBalance
@@ -147,7 +150,7 @@ router.post('/deleteById/:id', async (req, res) => {
     })
 });
 
-router.get('/getLastInserted', async (req, res) => {
+router.get('/getLastInserted', tokenVerification, async (req, res) => {
     var latest = await GrindingEntry.find({}).sort({_id:-1}).limit(1);
     res.send({content: latest, message: "success"});
 

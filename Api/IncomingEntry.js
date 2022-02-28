@@ -6,7 +6,9 @@ const { request } = require('express');
 
 const router = express.Router();
 
-router.get('/allInReport', async (req, res) => {
+const tokenVerification = require('./../middleware');
+
+router.get('/allInReport', tokenVerification, async (req, res) => {
     var all = [];
     var all = await IncomingEntry.find();
     if(all.length != 0){
@@ -17,7 +19,7 @@ router.get('/allInReport', async (req, res) => {
     }   
 })
 
-router.post('/', (req, res) => {
+router.post('/', tokenVerification, (req, res) => {
     IncomingEntry.create(req.body).then((res) => {
         console.log(req.body.incomingType);
         if(req.body.incomingType === "Powder"){
@@ -49,7 +51,7 @@ router.post('/', (req, res) => {
     })
 });
 
-router.post('/deleteById/:id', async (req, res) => {
+router.post('/deleteById/:id', tokenVerification, async (req, res) => {
     IncomingEntry.deleteOne({_id: req.params.id}).then(() => {
         var targetRockType = {
             params: {id: req.body.mineralId},
@@ -67,7 +69,7 @@ router.post('/deleteById/:id', async (req, res) => {
     })
 })
 
-router.get('/getLastInserted', async (req, res) => {
+router.get('/getLastInserted', tokenVerification, async (req, res) => {
     var latest = await IncomingEntry.find({}).sort({_id:-1}).limit(1);
     res.send({content: latest, message: "success"});
 })
