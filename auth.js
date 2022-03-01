@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const User = require('./DBConnection/models/user')
+const User = require('./DBConnection/models/User')
 const bcrypt = require('bcrypt')
 const rounds = 10
 
