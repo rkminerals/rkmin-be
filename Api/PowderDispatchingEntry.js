@@ -8,7 +8,7 @@ const router = express.Router();
 const tokenVerification = require('./../middleware');
 
 
-router.get('/allInReport', tokenVerification, async (req, res) => {
+router.get('/allInReport', async (req, res) => {
     var all = [];
     var all = await PowderDispatchingEntry.find();
     if(all.length != 0){

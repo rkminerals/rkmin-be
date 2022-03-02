@@ -10,7 +10,7 @@ const tokenVerification = require('./../middleware');
 
 const router = express.Router();
 
-router.get('/allInReport', tokenVerification, async (req, res) => {
+router.get('/allInReport', async (req, res) => {
     var all = [];
     var all = await GrindingEntry.find();
     
